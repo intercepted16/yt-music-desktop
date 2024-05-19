@@ -1,7 +1,7 @@
 import { app, BrowserWindow, Tray, Menu, session } from "electron";
 import { ElectronBlocker } from "@cliqz/adblocker-electron";
 import fetch from "cross-fetch";
-import { join } from "node:path";
+import path from "node:path";
 
 ElectronBlocker.fromPrebuiltAdsAndTracking(fetch).then((blocker) => {
   blocker.enableBlockingInSession(session.defaultSession);
@@ -10,9 +10,11 @@ ElectronBlocker.fromPrebuiltAdsAndTracking(fetch).then((blocker) => {
 let isQuitting = false;
 let win = null;
 
+const __dirname = app.getAppPath();
+
 const assetsPath = app.isPackaged
   ? path.join(process.resourcesPath, "assets")
-  : "assets";
+  : "./assets";
 
 const gotTheLock = app.requestSingleInstanceLock();
 
@@ -31,11 +33,11 @@ if (!gotTheLock) {
   const createWindow = () => {
     win = new BrowserWindow({
       title: "YouTube Music",
-      icon: join(assetsPath, "tray.ico"),
+      icon: path.join(assetsPath, "tray.ico"),
       width: 800,
       height: 600,
       webPreferences: {
-        preload: join(__dirname, "preload.js"),
+        preload: path.join(__dirname, "preload.js"),
       },
     });
     win.setMenu(null);
@@ -79,7 +81,7 @@ if (!gotTheLock) {
         win.hide();
       }
     });
-    let tray = new Tray(join(__dirname, "tray.ico"));
+    let tray = new Tray(path.join(assetsPath, "tray.ico"));
     tray.setContextMenu(
       Menu.buildFromTemplate([
         {
