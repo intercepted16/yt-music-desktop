@@ -41,7 +41,3 @@ npm start
 ## License
 
 MIT
-
-## Author
-
-intercepted16
